@@ -16,9 +16,9 @@ class JWTAuthentication(BaseAuthentication):
 
     def authenticate(self, request):
         token = self.extract_token(request=request)
+
         if token is None:
             return None
-
         try:
             payload = jwt.decode(
                 token, settings.SECRET_KEY, algorithms=['HS256'])

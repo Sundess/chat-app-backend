@@ -1,4 +1,5 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -27,3 +28,19 @@ def login(request):
         }, status=status.HTTP_201_CREATED)
 
     return Response(serilizer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def verify_token(request):
+    jwt_auth = JWTAuthentication()
+
+    try:
+        user_token_tuple = jwt_auth.authenticate(request=request)
+        print(user_token_tuple)
+        if user_token_tuple is not None:
+            return Response(True, status=200)
+        else:
+            return Response(False, status=401)
+    except Exception as e:
+        return Response(False, status=401)

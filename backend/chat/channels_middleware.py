@@ -9,6 +9,7 @@ class JWTWebsocketMiddleware(BaseMiddleware):
         close_old_connections()
 
         query_string = scope.get("query_string", b"").decode("utf-8")
+        print(query_string)
         query_parameter = dict(qp.split("=")
                                for qp in query_string.split("&") if "=" in qp)
 

@@ -7,11 +7,13 @@ from rest_framework.permissions import IsAuthenticated
 User = get_user_model()
 
 
-@api_view(['Get'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_list(request):
     try:
-        user_obj = User.objects.exclude(id=request.user.id)
+        # Exclude the current user AND users who are staff
+        user_obj = User.objects.exclude(
+            id=request.user.id).filter(is_staff=False)
         serializer = UserGetSerializer(user_obj, many=True)
         return Response(serializer.data)
     except Exception as e:
